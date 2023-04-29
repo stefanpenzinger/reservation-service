@@ -20,10 +20,7 @@ class ReservationController extends Controller
     }
 
     /**
-     * @param string $customerId
-     * @param string $status
-     * @param string $startDate
-     * @param string $endDate
+     * @param Request $request
      * @return Application|ResponseFactory|Response
      */
     public function create(Request $request) {
@@ -51,7 +48,7 @@ class ReservationController extends Controller
     }
 
     public function destroy(int $id) {
-        
+
     }
 
     public function show(int $id) {

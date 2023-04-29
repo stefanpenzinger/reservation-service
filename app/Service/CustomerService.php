@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use App\Models\Customer;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -15,18 +15,18 @@ class CustomerService
      */
     public function getCustomer(int $id)
     {
-       return Customer::firstOrFail($id);
+       return User::firstOrFail($id);
     }
 
     /**
      * @return Collection
      */
     public function getCustomers() {
-        return Customer::all();
+        return User::all();
     }
 
     public function createCustomer(string $firstName, string $lastName, string $mobile, string $email) {
-        $customer = Customer::create([
+        $customer = User::create([
             'first_name' => $firstName,
             'last_name' => $lastName,
             'mobile' => $mobile,

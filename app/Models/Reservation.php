@@ -15,7 +15,7 @@ class Reservation extends Model
      * Get customer who made the reservation
      */
    public function customer() {
-       return $this->belongsTo(Customer::class, 'customer_id', 'id');
+       return $this->belongsTo(User::class, 'user_id', 'id');
    }
 
     /**

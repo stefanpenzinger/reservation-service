@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
-            $table->index("customer_id");
-            $table->foreignId("customer_id")->constrained("customers");
+            $table->index("user_id");
+            $table->foreignId("user_id")->constrained("users");
             $table->string("status");
             $table->foreign("status")->references("status")->on("reservation_status");
             $table->dateTime("start_time");

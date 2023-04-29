@@ -2,12 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\Customer;
+use App\Models\Reservation;
 use App\Models\ReservationStatus;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Reservation>
+ * @extends Factory<Reservation>
  */
 class ReservationFactory extends Factory
 {
@@ -19,7 +20,7 @@ class ReservationFactory extends Factory
     public function definition(): array
     {
         return [
-            'customer_id' => $this->faker->randomElement(Customer::pluck('id')),
+            'user_id' => $this->faker->randomElement(User::pluck('id')),
             'status' => $this->faker->randomElement(ReservationStatus::pluck('status')),
             'start_time' => $this->faker->dateTimeThisYear,
             'end_time' => $this->faker->dateTimeThisMonth,
