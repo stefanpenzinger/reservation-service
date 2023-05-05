@@ -6,26 +6,34 @@
 
 import './bootstrap';
 import { createApp } from 'vue';
-import BootstrapVue3 from 'bootstrap-vue-3'
 
-// Since every component imports their Bootstrap functionality,
-// the following line is not necessary:
-// import 'bootstrap'
+/**
+ * Add Bootstrap Vue although it does not work with vue3 lol
+ */
+import BootstrapVue from 'bootstrap-vue-next'
 
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue-3/dist/bootstrap-vue-3.css'
+/**
+ * Add Axios for API calls on the frontend side
+ */
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+
+/**
+ * Import base vue component
+ */
+import App from './layout/App.vue'
 
 /**
  * Next, we will create a fresh Vue application instance. You may then begin
  * registering components with the application instance so they are ready
  * to use in your application's views. An example is included for you.
  */
-
-const app = createApp({});
+const app = createApp(App);
 
 import ExampleComponent from './components/ExampleComponent.vue';
 app.component('example-component', ExampleComponent);
-app.use(BootstrapVue3);
+app.use(BootstrapVue);
+app.use(VueAxios, axios)
 
 /**
  * The following block of code may be used to automatically register your

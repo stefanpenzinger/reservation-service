@@ -19,6 +19,12 @@ class ReservationController extends Controller
         return $reservationService->getReservations();
     }
 
+    public function getAllStatus() {
+        $reservationService = new ReservationService();
+
+        return $reservationService->getAllReservationStatus();
+    }
+
     /**
      * @param Request $request
      * @return Application|ResponseFactory|Response

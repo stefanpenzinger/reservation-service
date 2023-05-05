@@ -18,3 +18,11 @@
 ```bash
 ./vendor/bin/sail artisan serve
 ```
+
+### Make directories writeable for container? (maybe there is a different solution)
+```bash
+touch ./storage/logs/laravel.log
+chmod 777 ./storage/framework/sessions/
+chmod 777 ./storage/framework/views/
+chmod 777 ./storage/framework/cache/data/
+```

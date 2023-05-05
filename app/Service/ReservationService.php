@@ -2,8 +2,8 @@
 
 namespace App\Service;
 
-use App\Models\Customer;
 use App\Models\Reservation;
+use App\Models\ReservationStatus;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -25,6 +25,13 @@ class ReservationService
     public function getReservation(int $id)
     {
         return Reservation::findOrfail($id);
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getAllReservationStatus() {
+        return ReservationStatus::all();
     }
 
     /**

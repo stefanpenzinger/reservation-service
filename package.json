@@ -5,8 +5,16 @@
         "build": "vite build"
     },
     "devDependencies": {
-        "axios": "^1.1.2",
+        "axios": "^1.4.0",
         "laravel-vite-plugin": "^0.7.2",
         "vite": "^4.0.0"
+    },
+    "dependencies": {
+        "@vitejs/plugin-vue": "^4.2.1",
+        "bootstrap": "^5.2.3",
+        "bootstrap-vue-next": "^0.8.8",
+        "vue": "^3.2.36",
+        "vue-axios": "^3.5.2",
+        "vue-loader": "^17.0.1"
     }
 }

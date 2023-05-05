@@ -14,7 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/reservations', function () {
-    $controller = new ReservationController();
-    return $controller->index();
+/**
+ * This is the entry route of the application
+ */
+Route::get('/', function() {
+    return view('welcome');
 });
