@@ -6,6 +6,7 @@ use App\Models\Reservation;
 use App\Models\ReservationStatus;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Throwable;
 
 class ReservationService
 {
@@ -14,13 +15,14 @@ class ReservationService
      */
     public function getReservations(): Collection
     {
+        //return Reservation::inRandomOrder()->limit(100)->get();
         return Reservation::all();
     }
 
     /**
      * @param int $id
-     * @throws ModelNotFoundException
      * @return Reservation
+     * @throws ModelNotFoundException
      */
     public function getReservation(int $id)
     {
@@ -30,23 +32,28 @@ class ReservationService
     /**
      * @return Collection
      */
-    public function getAllReservationStatus() {
+    public function getAllReservationStatus()
+    {
         return ReservationStatus::all();
     }
 
     /**
-     * @param int $customerId
+     * @param int $userId
      * @param string $status
-     * @param string $startDate
-     * @param string $endDate
+     * @param string $startTime
+     * @param string $endTime
      * @return void
+     * @throws Throwable
      */
-    public function createReservation(int $customerId, string $status, string $startDate, string $endDate)
+    public function createReservation(int $userId, string $status, string $startTime, string $endTime)
     {
-        $customerService = new CustomerService();
-        $customer = $customerService->getCustomer($customerId);
-
         $reservation = new Reservation();
-        $reservation->customer()->save($customer);
+
+        $reservation->user_id = $userId;
+        $reservation->status = $status;
+        $reservation->start_time = $startTime;
+        $reservation->end_time = $endTime;
+
+        $reservation->saveOrFail();
     }
 }

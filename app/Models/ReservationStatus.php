@@ -9,15 +9,14 @@ class ReservationStatus extends Model
 {
     use HasFactory;
 
-    protected $table = 'reservation_status';
-
+    public $timestamps = false;
     /**
      * Indicates if the model's ID is auto-incrementing.
      *
      * @var bool
      */
     public $incrementing = false;
-
+    protected $table = 'reservation_status';
     /**
      * The primary key associated with the table.
      *

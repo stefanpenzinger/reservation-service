@@ -9,20 +9,18 @@ class Reservation extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
     protected $table = 'reservations';
-
-    /**
-     * Get customer who made the reservation
-     */
-   public function customer() {
-       return $this->belongsTo(User::class, 'user_id', 'id');
-   }
+    protected $hidden = [
+        'created_at',
+        'updated_at'
+    ];
 
     /**
      * Get the status of the reservation
      */
     public function status()
     {
-        return $this->hasOne(ReservationStatus::class);
+        return $this->belongsTo(ReservationStatus::class, 'status', 'status');
     }
 }

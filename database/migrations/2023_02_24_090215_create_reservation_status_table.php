@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('reservation_status', function (Blueprint $table) {
             $table->string("status")->primary();
             $table->string("description");
-            $table->timestamps();
         });
     }
 
