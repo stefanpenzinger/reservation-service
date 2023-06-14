@@ -2,10 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class ReservationStatusSeeder extends Seeder
 {
@@ -14,6 +12,10 @@ class ReservationStatusSeeder extends Seeder
      */
     public function run(): void
     {
+        DB::table('reservation_status')->insert([
+            'status' => "CREATED",
+            'description' => "Reservation created."
+        ]);
         DB::table('reservation_status')->insert([
             'status' => "CANC_AD",
             'description' => "Cancelled by admin."
