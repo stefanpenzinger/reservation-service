@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,15 +14,19 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::controller(ReservationController::class)->group(function () {
-    Route::prefix('v1/reservations')->group(function () {
-        Route::get('/','index');
-        Route::post('/', 'create');
-        Route::get('/status', 'getAllStatus');
-        Route::prefix('{id}')->group(function () {
-            Route::get('/', 'show');
-            Route::patch('/', 'edit');
-            Route::delete('/', 'destroy');
+
+Route::middleware('auth.user')->group(function () {
+    Route::controller(ReservationController::class)->group(function () {
+        Route::prefix('v1/reservations')->group(function () {
+            Route::get('/','index');
+            Route::post('/', 'create');
+            Route::get('/status', 'indexStatus');
+            Route::get('/customer/{customerId}', 'customerReservations');
+            Route::prefix('{id}')->group(function () {
+                Route::get('/', 'show');
+                Route::patch('/', 'edit');
+                Route::delete('/', 'destroy');
+            });
         });
     });
 });
