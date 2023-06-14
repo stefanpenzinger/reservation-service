@@ -24,9 +24,19 @@ class ReservationService
      * @return Reservation
      * @throws ModelNotFoundException
      */
-    public function getReservation(int $id)
+    public function getReservationById(int $id)
     {
         return Reservation::findOrfail($id);
+    }
+
+    /**
+     * @param int $userId
+     * @return Reservation
+     * @throws ModelNotFoundException
+     */
+    public function getReservationsByCustomerId(int $userId)
+    {
+        return Reservation::where('user_id', $userId)->get();
     }
 
     /**
@@ -55,5 +65,34 @@ class ReservationService
         $reservation->end_time = $endTime;
 
         $reservation->saveOrFail();
+    }
+
+    /**
+     * @param int $reservationId
+     * @param string $status
+     * @param string $startTime
+     * @param string $endTime
+     * @return void
+     */
+    public function updateReservation(int $reservationId, string $status, string $startTime, string $endTime)
+    {
+        $reservation = Reservation::findOrFail($reservationId);
+
+        $reservation->status = $status;
+        $reservation->start_time = $startTime;
+        $reservation->end_time = $endTime;
+
+        $reservation->saveOrFail();
+    }
+
+    /**
+     * @param int $reservationId
+     * @return void
+     * @throws Throwable
+     */
+    public function deleteReservation(int $reservationId)
+    {
+        $reservation = Reservation::findOrFail($reservationId);
+        $reservation->deleteOrFail();
     }
 }

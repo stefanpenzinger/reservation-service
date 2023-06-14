@@ -9,7 +9,6 @@ class Reservation extends Model
 {
     use HasFactory;
 
-    public $timestamps = false;
     protected $table = 'reservations';
     protected $hidden = [
         'created_at',

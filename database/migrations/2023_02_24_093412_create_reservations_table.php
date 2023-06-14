@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreign("status")->references("status")->on("reservation_status");
             $table->timestamp("start_time");
             $table->timestamp("end_time");
+            $table->timestamps();
         });
     }
 
