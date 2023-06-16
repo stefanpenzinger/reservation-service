@@ -2,13 +2,19 @@
 
 namespace Tests\Feature;
 
+use App\Models\Reservation;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Foundation\Testing\TestCase;
 use Tests\CreatesApplication;
 
-class ReservationTest extends \Illuminate\Foundation\Testing\TestCase
+class ReservationTest extends TestCase
 {
     use CreatesApplication;
 
-    /** @test */
+    /**
+     * Tests if the application can create a reservation
+     * @test
+     */
     public function it_can_create_a_reservation()
     {
         $this->withoutMiddleware();
@@ -20,15 +26,49 @@ class ReservationTest extends \Illuminate\Foundation\Testing\TestCase
             'end_time' => '2020-01-01 14:00:00',
         ];
 
-        $response = $this->json('POST', 'api/v1/reservations/', [
-            'user_id' => 3,
+        $response = $this->json('POST', 'api/v1/reservations/', $reservationData);
+
+        $response->assertStatus(201);
+        $this->assertDatabaseHas('reservations', $reservationData);
+    }
+
+    /**
+     * Tests if the application can update a reservation
+     * @test
+     */
+    public function it_can_update_a_reservation()
+    {
+        $this->withoutMiddleware();
+
+        $reservation = Reservation::query()->firstOrFail();
+        $reservationUpdateData = [
             'status' => 'CHECKOUT',
             'start_time' => '2020-01-01 10:00:00',
             'end_time' => '2020-01-01 14:00:00',
-        ]);
+        ];
 
-        $response->assertStatus(201);
-        //$this->assertDatabaseHas('reservations', $reservationData);
+        $response = $this->json('PATCH', 'api/v1/reservations/' . $reservation->id, $reservationUpdateData);
+
+        $response->assertStatus(204);
+        $this->assertDatabaseHas('reservations', $reservationUpdateData);
+    }
+
+    /**
+     * Tests if the application can delete a reservation
+     * @test
+     */
+    public function it_can_delete_a_reservation()
+    {
+        $this->expectException(ModelNotFoundException::class);
+        $this->withoutMiddleware();
+
+        $reservation = Reservation::query()->firstOrFail();
+        $id = $reservation->id;
+
+        $response = $this->json('DELETE', 'api/v1/reservations/' . $id);
+
+        $response->assertStatus(204);
+        Reservation::query()->findOrFail($id);
     }
 
     protected function setUp(): void
