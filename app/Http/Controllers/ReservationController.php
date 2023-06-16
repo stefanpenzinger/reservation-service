@@ -3,120 +3,171 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateReservationRequest;
+use App\Http\Requests\UpdateReservationRequest;
 use App\Service\ReservationService;
+use App\Traits\HttpResponses;
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 
 class ReservationController extends Controller
 {
-    public function index()
+    use HttpResponses;
+
+    /**
+     * Retrieve all reservations
+     *
+     * @return JsonResponse
+     */
+    public function index(): JsonResponse
     {
-        $reservationService = new ReservationService();
-
-        return $reservationService->getReservations();
-    }
-
-    public function indexStatus()
-    {
-        $reservationService = new ReservationService();
-
-        return $reservationService->getAllReservationStatus();
+        try {
+            $reservationService = new ReservationService();
+            return $this->success($reservationService->getReservations());
+        } catch (Throwable $exception) {
+            Log::error($exception);
+            return $this->error([], 500, "Internal Server Error");
+        }
     }
 
     /**
-     * @return Response
+     * Retrieve all reservation status
+     *
+     * @return JsonResponse
      */
-    public function create(CreateReservationRequest $request)
+    public function indexStatus(): JsonResponse
     {
         try {
-            $request->validated($request->all());
             $reservationService = new ReservationService();
-
-            $data = request()->all();
-
-            $reservationService->createReservation(
-                $data['user_id'],
-                $data['status'],
-                $data['end_time'],
-                $data['start_time']
-            );
-
-            return \response([], ResponseAlias::HTTP_CREATED);
-        } catch (ModelNotFoundException $mnfe) {
-            Log::error($mnfe);
-            return response("Invalid status", ResponseAlias::HTTP_NOT_FOUND);
-        } catch (\Exception|Throwable $e) {
-            Log::error($e);
-            return response("Server Error", ResponseAlias::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->success($reservationService->getAllReservationStatus());
+        } catch (Throwable $exception) {
+            Log::error($exception);
+            return $this->error([], 500, "Internal Server Error");
         }
     }
 
-    public function update()
+    /**
+     * Create a reservation
+     *
+     * @param CreateReservationRequest $request the request with reservation data
+     * @return JsonResponse
+     */
+    public function create(CreateReservationRequest $request): JsonResponse
     {
         try {
+            $reservationData = request()->all();
+
+            $request->validated($reservationData);
             $reservationService = new ReservationService();
-            $data = request()->all();
+
+            $reservation = $reservationService->createReservation(
+                $reservationData['user_id'],
+                $reservationData['status'],
+                $reservationData['start_time'],
+                $reservationData['end_time']
+            );
+
+            return $this->success($reservation, ResponseAlias::HTTP_CREATED, "Reservation created.");
+        } catch (ModelNotFoundException $mnfe) {
+            Log::error($mnfe);
+            return $this->error([], ResponseAlias::HTTP_NOT_FOUND, "Invalid status");
+        } catch (Exception|Throwable $e) {
+            Log::error($e);
+            return $this->error([], ResponseAlias::HTTP_INTERNAL_SERVER_ERROR, "Internal server error");
+        }
+    }
+
+    /**
+     * Update a reservation
+     *
+     * @param UpdateReservationRequest $request The request with the updated reservation data
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function update(UpdateReservationRequest $request, int $id): JsonResponse
+    {
+        try {
+            $reservationData = request()->all();
+            $request->validated($reservationData);
+
+            $reservationService = new ReservationService();
 
             $reservationService->updateReservation(
-                $data['reservation_id'],
-                $data['status'],
-                $data['end_time'],
-                $data['start_time']
+                $id,
+                $reservationData['status'],
+                $reservationData['start_time'],
+                $reservationData['end_time']
             );
 
-            return \response();
+            return $this->success([], ResponseAlias::HTTP_NO_CONTENT, "Reservation was updated");
         } catch (ModelNotFoundException $mnfe) {
             Log::error($mnfe);
-            return response("Reservation not found.", ResponseAlias::HTTP_NOT_FOUND);
+            return $this->error([], ResponseAlias::HTTP_NOT_FOUND, "Reservation not found");
         } catch (Throwable $e) {
             Log::error($e);
-            return response("Server Error.", ResponseAlias::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->error([], ResponseAlias::HTTP_INTERNAL_SERVER_ERROR, "Internal server error");
         }
     }
 
-    public function destroy(int $id)
+    /**
+     * Delete a reservation by its ID
+     *
+     * @param int $id the ID of the reservation
+     * @return JsonResponse
+     */
+    public function destroy(int $id): JsonResponse
     {
         try {
             $reservationService = new ReservationService();
             $reservationService->deleteReservation($id);
 
-            return \response();
+            return $this->success([], ResponseAlias::HTTP_NO_CONTENT, "Reservation was deleted");
         } catch (ModelNotFoundException $mnfe) {
             Log::error($mnfe);
-            return response("Reservation not found.", ResponseAlias::HTTP_NOT_FOUND);
+            return $this->error([], ResponseAlias::HTTP_NOT_FOUND, "Reservation not found");
         } catch (Throwable $e) {
             Log::error($e);
-            return response("Server Error.", ResponseAlias::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->error([], ResponseAlias::HTTP_INTERNAL_SERVER_ERROR, "Internal server error");
         }
     }
 
-    public function show(int $id)
+    /**
+     * Get a reservation by its id
+     *
+     * @param int $id the ID of the reservation
+     * @return JsonResponse
+     */
+    public function show(int $id): JsonResponse
     {
         try {
             $reservationService = new ReservationService();
 
-            return $reservationService->getReservationById($id);
+            return $this->success($reservationService->getReservationById($id));
         } catch (ModelNotFoundException $mnfe) {
             Log::error($mnfe);
-            return response("Reservation not found.", ResponseAlias::HTTP_NOT_FOUND);
+            return $this->error([], ResponseAlias::HTTP_NOT_FOUND, "Reservation not found");
         } catch (Throwable $e) {
             Log::error($e);
-            return response("Server Error.", ResponseAlias::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->error([], ResponseAlias::HTTP_INTERNAL_SERVER_ERROR, "Internal server error");
         }
     }
 
-    public function customerReservations(int $customerId)
+    /**
+     * @param int $userId
+     * @return JsonResponse
+     */
+    public function indexByUser(int $userId): JsonResponse
     {
         try {
             $reservationService = new ReservationService();
 
-            return $reservationService->getReservationsByCustomerId($customerId);
+            return $this->success($reservationService->getReservationsByUserId($userId));
         } catch (Throwable $e) {
             Log::error($e);
-            return response("Server Error.", ResponseAlias::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->error([], ResponseAlias::HTTP_INTERNAL_SERVER_ERROR, "Internal server error");
         }
     }
 }

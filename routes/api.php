@@ -20,10 +20,10 @@ Route::middleware('auth.user')->group(function () {
             Route::get('/','index');
             Route::post('/', 'create');
             Route::get('/status', 'indexStatus');
-            Route::get('/customer/{customerId}', 'customerReservations');
+            Route::get('/user/{userId}', 'indexByUser');
             Route::prefix('{id}')->group(function () {
                 Route::get('/', 'show');
-                Route::patch('/', 'edit');
+                Route::patch('/', 'update');
                 Route::delete('/', 'destroy');
             });
         });
