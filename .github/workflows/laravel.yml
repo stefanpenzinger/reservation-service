@@ -1,4 +1,4 @@
-name: Laravel
+name: Test Laravel, do sonar cloud analysis and push to google cloud platform
 
 on:
   push:
@@ -43,3 +43,37 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          
+  build-push-gcr:
+      runs-on: ubuntu-latest
+      name: Build an Push to GCP
+      env:
+        IMAGE_NAME: reservation-service
+        PROJECT_ID: bachelor-thesis-390012
+      steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        
+      - uses: google-github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+          project_id: ${{ env.PROJECT_ID }}
+          export_default_credentials: true
+          
+      - name: Build Docker Image
+        run: docker build -t $IMAGE_NAME:latest ./docker/8.2/.
+        
+      - name: Configure Docker Client
+        run: |-
+          gcloud auth configure-docker --quiet
+          
+      - name: PUSH Docker Image to Container Registry (GCR)
+        env:
+          GIT_TAG: v0.1.0
+        run: |-
+          docker tag $IMAGE_NAME:latest gcr.io/$PROJECT_ID/$IMAGE_NAME:latest
+          docker tag $IMAGE_NAME:latest gcr.io/$PROJECT_ID/$IMAGE_NAME:$GIT_TAG
+          docker push gcr.io/$PROJECT_ID/$IMAGE_NAME:latest
+          docker push gcr.io/$PROJECT_ID/$IMAGE_NAME:$GIT_TAG
+          
+          
