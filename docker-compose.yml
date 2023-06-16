@@ -1,7 +1,6 @@
 version: '3'
 services:
-    laravel.test:
-        container_name: "reservation_app"
+    app:
         build:
             context: ./docker/8.2
             dockerfile: Dockerfile
