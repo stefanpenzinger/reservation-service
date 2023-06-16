@@ -26,7 +26,7 @@ class AuthenticateUser
 
         // Send a request to the user-management-service to validate the token
         $client = new Client();
-        $response = $client->post('user-management_app/api/verify-token', [
+        $response = $client->post('user-management_app/api/v1/verify-token', [
             'headers' => ['Authorization' => $apiToken]
         ]);
 
