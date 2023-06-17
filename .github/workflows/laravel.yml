@@ -48,13 +48,14 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and Push to GCP
     env:
-      IMAGE_NAME: reservation-service
+      IMAGE_NAME: europe-west9-docker.pkg.dev/bachelor-thesis-390012/reservation-service/reservation-service
       PROJECT_ID: bachelor-thesis-390012
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
-      - uses: google-github-actions/setup-gcloud@v1
+      
+      - name: Install Google Cloud CLI
+      - uses: google-github-actions/setup-gcloud@v0
         with:
           service_account_key: ${{ secrets.SERVICE_ACCOUNT_KEY }}
           project_id: ${{ env.PROJECT_ID }}
@@ -63,16 +64,10 @@ jobs:
       - name: Build Docker Image
         run: docker build -t $IMAGE_NAME:latest ./docker/8.2/.
 
-      - name: Configure Docker Client
-        run: |
-          gcloud auth configure-docker --quiet
-
       - name: Push Docker Image to Container Registry (GCR)
-        uses: RafikFarhad/push-to-gcr-github-action@v5-beta
-        with:
-          project_id: ${{ env.PROJECT_ID }}
-          image_name: ${{ env.IMAGE_NAME }}
-          image_tag: v0.1.0
-          gcloud_service_key: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+        run: |
+          gcloud auth configure-docker europe-west9-docker.pkg.dev
+          docker build -t $IMAGE_NAME:latest ./docker/8.2/.
+          docker push $IMAGE_NAME:latest
 
 
