@@ -8,11 +8,11 @@ on:
 
 jobs:
   laravel-tests:
-
+    name: Run all laravel tests
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
     - name: Copy .env
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
     - name: Install Dependencies
@@ -32,6 +32,7 @@ jobs:
       run: vendor/bin/phpunit --testdox
 
   sonarcloud:
+      name: Start SonarCloud code analysis
       runs-on: ubuntu-latest
       steps:
       - name: Checkout
@@ -46,6 +47,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           
   build-push-gcr:
+      name: Build docker image and push it to Google Artifcat Repository
       runs-on: ubuntu-latest
       env:
         IMAGE_NAME: europe-west9-docker.pkg.dev/bachelor-thesis-390012/reservation-service/reservation-service
