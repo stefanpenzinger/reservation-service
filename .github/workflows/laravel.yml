@@ -44,14 +44,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
+  
   build-push-gcr:
-    runs-on: ubuntu-latest
-    name: Build and Push to GCP
-    env:
-      IMAGE_NAME: europe-west9-docker.pkg.dev/bachelor-thesis-390012/reservation-service/reservation-service
-      PROJECT_ID: bachelor-thesis-390012
-    steps:
+      runs-on: ubuntu-latest
+      name: Build and Push to GCP
+      env:
+        IMAGE_NAME: europe-west9-docker.pkg.dev/bachelor-thesis-390012/reservation-service/reservation-service
+        PROJECT_ID: bachelor-thesis-390012
+      steps:
       - name: Checkout
         uses: actions/checkout@v2
       
