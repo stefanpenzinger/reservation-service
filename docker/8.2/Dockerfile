@@ -5,7 +5,7 @@ LABEL maintainer="Taylor Otwell"
 ARG WWWGROUP=1000
 ARG NODE_VERSION=18
 ARG POSTGRES_VERSION=15
-ARG APP_SERVICE="reservation-service"
+ARG APP_SERVICE="reservation-app"
 
 WORKDIR /var/www/html
 

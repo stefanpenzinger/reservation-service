@@ -6,7 +6,6 @@ use Closure;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthenticateUser
@@ -22,11 +21,10 @@ class AuthenticateUser
     public function handle(Request $request, Closure $next): Response
     {
         $apiToken = $request->header('Authorization');
-        Log::error($apiToken);
 
         // Send a request to the user-management-service to validate the token
         $client = new Client();
-        $response = $client->post('user-management_app/api/v1/verify-token', [
+        $response = $client->post('user-management-app/api/v1/verify-token', [
             'headers' => ['Authorization' => $apiToken]
         ]);
 
