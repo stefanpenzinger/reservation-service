@@ -67,7 +67,8 @@ class ReservationController extends Controller
                 $reservationData['user_id'],
                 $reservationData['status'],
                 $reservationData['start_time'],
-                $reservationData['end_time']
+                $reservationData['end_time'],
+                $reservationData['location'],
             );
 
             return $this->success($reservation, ResponseAlias::HTTP_CREATED, "Reservation created.");

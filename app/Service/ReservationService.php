@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Str;
 use Throwable;
 
 class ReservationService
@@ -61,10 +62,11 @@ class ReservationService
      * @param string $status
      * @param string $startTime
      * @param string $endTime
+     * @param string $location
      * @return Reservation
      * @throws Throwable
      */
-    public function createReservation(int $userId, string $status, string $startTime, string $endTime): Reservation
+    public function createReservation(int $userId, string $status, string $startTime, string $endTime, string $location): Reservation
     {
         $reservation = new Reservation();
 
@@ -72,7 +74,8 @@ class ReservationService
         $reservation->status = $status;
         $reservation->start_time = $startTime;
         $reservation->end_time = $endTime;
-
+        $reservation->location = $location;
+        $reservation->code = Str::uuid();
         $reservation->saveOrFail();
 
         return $reservation;

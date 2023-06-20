@@ -24,6 +24,7 @@ class ReservationTest extends TestCase
             'status' => 'CHECKOUT',
             'start_time' => '2020-01-01 10:00:00',
             'end_time' => '2020-01-01 14:00:00',
+            'loaction' => '4232 Hagenberg'
         ];
 
         $response = $this->json('POST', 'api/v1/reservations/', $reservationData);
